@@ -1,0 +1,13 @@
+nginx:
+    image: "nginx:latest"
+    ports:
+        - 8000:80
+        - 9000:443
+    links:
+        - webserver:webserver
+    volumes:
+        - /home/e343976/extra/sandbox/nginx:/etc/nginx/conf.d
+webserver:
+    image: "webserver:latest"
+    ports:
+        - 127.0.0.1:6000:6000

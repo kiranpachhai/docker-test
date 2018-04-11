@@ -1,0 +1,36 @@
+---
+- hosts: "localhost"
+  tasks:
+  - name: "Put nginx webserver.conf file that is used by docker container"
+    register: nginxconfig
+    copy:
+      src: /home/e343976/extra/ansible/configs/nginx.conf
+      dest: /home/e343976/extra/sandbox/nginx/webserver.conf
+      owner: root
+      group: root
+      mode: 0644
+  - name: "Put server.crt file that is used by docker container"
+    copy:
+      src: /home/e343976/extra/ansible/configs/server.crt
+      dest: /home/e343976/extra/sandbox/nginx/server.crt
+      owner: root
+      group: root
+      mode: 0644
+  - name: "Put server.key file that is used by docker container"
+    copy:
+      src: /home/e343976/extra/ansible/configs/server.key
+      dest: /home/e343976/extra/sandbox/nginx/server.key
+      owner: root
+      group: root
+      mode: 0644
+  - name: "Put docker-compose file"
+    register: composeconfig
+    copy:
+      src: /home/e343976/extra/ansible/configs/docker-compose.yml
+      dest: /home/e343976/extra/sandbox/docker-compose.yml
+      owner: root
+      group: root
+      mode: 0644
+  - name: "Start docker services"
+    shell: docker-compose -f /home/e343976/extra/sandbox/docker-compose.yml up -d
+    when: nginxconfig.changed or composeconfig.changed
